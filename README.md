@@ -58,4 +58,6 @@ printf("\n");
 vectorClear(vector);
 printf("Is Vector has elements: %s\n", isVectorNotEmpty(vector) ? "Yes" : "No");    // No
 printf("Is Vector empty: %s\n", isVectorEmpty(vector) ? "Yes" : "No");              // Yes
+
+vectorDelete(vector);
 ```
