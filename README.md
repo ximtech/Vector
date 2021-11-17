@@ -15,7 +15,7 @@ An array follows static approach, means its size cannot be changed during run ti
 
 ### Trade-offs
 - Mostly static Vector data type, can't be changed at runtime
-- Not thread safe
+- Not tested in multi thread applications
 
 ### Usage
 Example of usage:
