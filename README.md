@@ -1,21 +1,22 @@
 # Vector
 **STM32** lightweight implementation of Vector array.\
-The Vector is a resizable array. It is like an array, but there is no size limit.
+Vectors are sequence containers representing arrays that can change in size.
 
 ## Difference between vector and array
-An array follows static approach, means its size cannot be changed during run time while vector implements dynamic array means it automatically resizes itself when appending elements.
+An array follows static approach, means its size cannot be changed during run time. 
+While vector implements dynamic array, means it automatically resizes itself when appending elements.
 
 ### Features 
-- Specially designed for embedded applications
-- Automatic array size reduction / enlargement
-- Easy to user and add to project
-- Fast element get and add
+- Specifically designed for embedded applications
+- Automatic array size reduction/enlargement
+- Easy to use and add to the project
+- Performance optimized
 - Element insert in the middle
 - Low memory consumption
 
 ### Trade-offs
 - Mostly static Vector data type, can't be changed at runtime
-- Not tested in multi thread applications
+- Not tested in multi-threaded applications
 
 ### Usage
 Example of usage:
