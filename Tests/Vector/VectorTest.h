@@ -16,7 +16,7 @@ static void *vectorSetup(const MunitParameter params[], void *userData) {
 static MunitResult testVectorAddElements(const MunitParameter params[], void *vector) {
     (Vector) vector;
     for (int i = 0; i < 10000; i++) {
-        vectorAdd(vector, (ItemType) i);
+        vectorAdd(vector, (VectorValueType) i);
         assert_int(getVectorSize(vector), ==, i + 1);
         assert_int((int) vectorGet(vector, i), ==, i);
     }
@@ -26,11 +26,11 @@ static MunitResult testVectorAddElements(const MunitParameter params[], void *ve
 
 static MunitResult testVectorPutElements(const MunitParameter params[], void *vector) {
     (Vector) vector;
-    vectorAdd(vector, (ItemType) 12);
-    vectorAdd(vector, (ItemType) 13);
-    vectorAdd(vector, (ItemType) 14);
+    vectorAdd(vector, (VectorValueType) 12);
+    vectorAdd(vector, (VectorValueType) 13);
+    vectorAdd(vector, (VectorValueType) 14);
 
-    vectorPut(vector, 1, (ItemType) 456);
+    vectorPut(vector, 1, (VectorValueType) 456);
     assert_int(getVectorSize(vector), ==, 3);
     assert_int((int) vectorGet(vector, 1), ==, 456);
     return MUNIT_OK;
@@ -38,17 +38,17 @@ static MunitResult testVectorPutElements(const MunitParameter params[], void *ve
 
 static MunitResult testVectorAddAtElement(const MunitParameter params[], void *vector) {
     (Vector) vector;
-    vectorAdd(vector, (ItemType) 12);
-    vectorAdd(vector, (ItemType) 13);
-    vectorAdd(vector, (ItemType) 14);
+    vectorAdd(vector, (VectorValueType) 12);
+    vectorAdd(vector, (VectorValueType) 13);
+    vectorAdd(vector, (VectorValueType) 14);
     assert_int(getVectorSize(vector), ==, 3);
 
-    vectorAddAt(vector, 2, (ItemType) 56);  // insert element at 2nd position
+    vectorAddAt(vector, 2, (VectorValueType) 56);  // insert element at 2nd position
     assert_int(getVectorSize(vector), ==, 4);   // size should be increased
     assert_int((int) vectorGet(vector, 2), ==, 56); // check for new value at index
     assert_int((int) vectorGet(vector, 3), ==, 14); // previous element should be shifted right
 
-    vectorAddAt(vector, 0, (ItemType) 33);  // insert element at 0 position
+    vectorAddAt(vector, 0, (VectorValueType) 33);  // insert element at 0 position
     assert_int(getVectorSize(vector), ==, 5);   // size should be increased
     assert_int((int) vectorGet(vector, 0), ==, 33); // check for new value at index
 
@@ -63,11 +63,11 @@ static MunitResult testVectorAddAtElement(const MunitParameter params[], void *v
 
 static MunitResult testVectorRemoveAtElement(const MunitParameter params[], void *vector) {
     (Vector) vector;
-    vectorAdd(vector, (ItemType) 1);    // index: 0
-    vectorAdd(vector, (ItemType) 2);    // index: 1
-    vectorAdd(vector, (ItemType) 3);    // index: 2
-    vectorAdd(vector, (ItemType) 4);    // index: 3
-    vectorAdd(vector, (ItemType) 5);    // index: 3
+    vectorAdd(vector, (VectorValueType) 1);    // index: 0
+    vectorAdd(vector, (VectorValueType) 2);    // index: 1
+    vectorAdd(vector, (VectorValueType) 3);    // index: 2
+    vectorAdd(vector, (VectorValueType) 4);    // index: 3
+    vectorAdd(vector, (VectorValueType) 5);    // index: 3
     assert_int(getVectorSize(vector), ==, 5);
 
     assert_int((int) vectorRemoveAt(vector, 2), ==, 3); // should return value stored at index
@@ -87,7 +87,7 @@ static MunitResult testVectorRemoveAtElement(const MunitParameter params[], void
 static MunitResult testVectorRemoveElements(const MunitParameter params[], void *vector) {
     (Vector) vector;
     for (int i = 0; i < 10000; i++) {
-        vectorAdd(vector, (ItemType) i);
+        vectorAdd(vector, (VectorValueType) i);
     }
     assert_int(getVectorSize(vector), ==, 10000);
 
@@ -104,7 +104,7 @@ static MunitResult testVectorEmptyChecks(const MunitParameter params[], void *ve
     assert_true(isVectorEmpty(vector));
     assert_false(isVectorNotEmpty(vector));
 
-    vectorAdd(vector, (ItemType) 1);
+    vectorAdd(vector, (VectorValueType) 1);
     assert_false(isVectorEmpty(vector));
     assert_true(isVectorNotEmpty(vector));
     return MUNIT_OK;
@@ -112,9 +112,9 @@ static MunitResult testVectorEmptyChecks(const MunitParameter params[], void *ve
 
 static MunitResult testVectorClear(const MunitParameter params[], void *vector) {
     (Vector) vector;
-    vectorAdd(vector, (ItemType) 1);
-    vectorAdd(vector, (ItemType) 2);
-    vectorAdd(vector, (ItemType) 3);
+    vectorAdd(vector, (VectorValueType) 1);
+    vectorAdd(vector, (VectorValueType) 2);
+    vectorAdd(vector, (VectorValueType) 3);
     assert_int(getVectorSize(vector), ==, 3);
 
     vectorClear(vector);
@@ -126,12 +126,12 @@ static MunitResult testVectorSingleton(const MunitParameter params[], void *vect
     assert_null(someVector);
     initSingletonVector(&someVector, 1);
     assert_not_null(someVector);
-    vectorAdd(someVector, (ItemType) 12);
-    vectorAdd(someVector, (ItemType) 13);
+    vectorAdd(someVector, (VectorValueType) 12);
+    vectorAdd(someVector, (VectorValueType) 13);
     assert_true(isVectorNotEmpty(someVector));
 
     initSingletonVector(&someVector, 1);
-    vectorAdd(someVector, (ItemType) 14);
+    vectorAdd(someVector, (VectorValueType) 14);
     assert_int(getVectorSize(someVector), ==, 3);
     vectorDelete(someVector);
     someVector = NULL;
