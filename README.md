@@ -18,6 +18,17 @@ While vector implements dynamic array, means it automatically resizes itself whe
 - Mostly static Vector data type, can't be changed at runtime
 - Not tested in multi-threaded applications
 
+### Add as CPM project dependency
+How to add CPM to the project, check the [link](https://github.com/cpm-cmake/CPM.cmake)
+```cmake
+CPMAddPackage(
+        NAME Vector
+        GITHUB_REPOSITORY ximtech/Vector
+        GIT_TAG origin/main)
+
+target_link_libraries(${PROJECT_NAME} Vector)
+```
+
 ### Usage
 Example of usage:
 ```C
