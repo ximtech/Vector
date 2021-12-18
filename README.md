@@ -1,4 +1,7 @@
 # Vector
+
+[![tests](https://github.com/ximtech/Vector/actions/workflows/cmake-ci.yml/badge.svg)](https://github.com/ximtech/Vector/actions/workflows/cmake-ci.yml)
+
 **STM32** lightweight implementation of Vector array.\
 Vectors are sequence containers representing arrays that can change in size.
 
