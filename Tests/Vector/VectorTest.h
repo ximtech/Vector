@@ -81,6 +81,8 @@ static MunitResult testVectorRemoveAtElement(const MunitParameter params[], void
     assert_int((int) vectorGet(vector, 0), ==, 2);
     assert_int((int) vectorGet(vector, 1), ==, 4);
     assert_int((int) vectorGet(vector, 2), ==, 5);
+
+    assert_int((int) vectorRemoveAt(NULL, 2), ==, 0);
     return MUNIT_OK;
 }
 
