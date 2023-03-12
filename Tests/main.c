@@ -1,9 +1,10 @@
 #include "Vector/VectorTest.h"
+#include "Vector/BufferVectorTest.h"
 
 
 int main(int argc, char *argv[MUNIT_ARRAY_PARAM(argc + 1)]) {
     MunitTest emptyTests[] = {END_OF_TESTS};
-    MunitSuite testSuitArray[] = {vectorTestSuite};
+    MunitSuite testSuitArray[] = {vectorTestSuite, bufferVectorTestSuite};
 
     MunitSuite baseSuite = {
             .prefix = "",
