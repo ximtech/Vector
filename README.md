@@ -49,13 +49,13 @@ target_link_libraries(${PROJECT_NAME}.elf Vector)
 
 Fixed size of generic type `Vector`. This implementation not allocate heap memory, but need compile time known capacity
 
-#### Single header include
+### Single header include
 
 ```c
 #include "BufferVector.h"
 ```
 
-#### Setup vector element compare function
+### Setup vector element compare function
 
 - On the top level provide function to compare Vector elements, this function will be used for elements ordering.
 - Default type macros can be used.
@@ -70,7 +70,7 @@ CREATE_CHAR_COMPARATOR(char);               // charComparator(char one, char two
 CREATE_STRING_COMPARATOR(cStr);             // cStrComparator(const char *one, const char *two)
 ```
 
-##### Custom comparator creation
+#### Custom comparator creation
 
 For custom types provide comparator function as in example:
 
@@ -106,7 +106,7 @@ Provide:
 CREATE_CUSTOM_COMPARATOR(userName, User, one, two, strcmp(one.name, two.name)); // creates `int userNameComparator(User one, User two)`
 ```
 
-#### Define Vector type
+### Define Vector type
 
 Provide: 
 1. Vector elements stored type
@@ -121,14 +121,14 @@ CREATE_VECTOR_TYPE(User, user, userAgeComparator); // alias will be used for typ
 CREATE_VECTOR_TYPE(char*, cStr, cStrComparator); // `cStrVector`
 ```
 
-#### Method and type naming convention
+### Method and type naming convention
 
 1. When only type provided, then methods will be generated like: `<type>Vec...()` and `is<type>Vec...()`
 2. When type alias(name) provided, then methods will be generated like: `<name>Vec...()` and `is<name>Vec...()`
 3. Same for Vector typedef naming
 
 
-#### Base vector creation
+### Base vector creation
 When comparator and all needed types provided, then `Vector` can be instantiated
 ```c
 intVector *intVec1 = NEW_VECTOR(int, 4); // empty vector with max length of 4
@@ -141,7 +141,7 @@ intVector *intVec5 = NEW_VECTOR_OF(32, int, int, 1, 2, 3, 4, 5); // vector with 
 userVector *uVec = VECTOR_OF(user, User, {.name = "name_1", .age = 23}); // custom type init
 ```
 
-#### Add elements
+### Add elements
 
 ***NOTE***: method `<type_name>VecAdd()` return `true` if element has been added or `false` when vector is full
 
@@ -155,7 +155,7 @@ cStrVecAdd(strVec, "ddd");
 assert(cStrVecAdd(strVec, "eee") == false); // vector is full, return false
 ```
 
-#### Get elements
+### Get elements
 ```c
 intVector *intVec = VECTOR(int, 1, 2, 3, 4);
 intVecGet(intVec, 0);   // 1
@@ -167,20 +167,20 @@ intVecGet(intVec, 4);   // accessing index that is out of bounds, returns defaul
 intVecGetOrDefault(intVec, 5, 12345);   // return '12345'
 ```
 
-#### Put element at specific index
+### Put element at specific index
 ```c
 intVector *intVec = VECTOR(int, 1, 2, 3, 4);
 intVecPut(intVec, 1, 99);   // [1], [99], [3], [4]
 ```
 
-#### Add element at index
+### Add element at index
 ```c
 intVector *intVec = NEW_VECTOR_OF(8, int, int, 1, 2, 3, 4);
 intVecAddAt(intVec, 0, 21); // [21], [1], [2], [3], [4]
 intVecAddAt(intVec, 5, 22); // [21], [1], [2], [3], [4], [22]
 intVecAddAt(intVec, 2, 23); // [21], [1], [23], [2], [3], [4], [22]
 ```
-#### Remove element at index
+### Remove element at index
 ```c
 intVector *intVec = VECTOR(int, 1, 2, 3, 4, 5);
 intVecRemoveAt(intVec, 0); // [2], [3], [4], [5]
@@ -188,7 +188,7 @@ intVecRemoveAt(intVec, 1); // [2], [4], [5]
 intVecRemoveAt(intVec, 2); // [2], [4]
 ```
 
-#### Check that vector is empty or not
+### Check that vector is empty or not
 ```c
 charVector *cVec = VECTOR(char, 'a', 'b', 'c');
 assert(ischarVecEmpty(cVec) == false);  // not empty
@@ -199,20 +199,20 @@ assert(ischarVecEmpty(cVec) == true);  // empty
 assert(ischarVecNotEmpty(cVec) == false);
 ```
 
-#### Holding element count
+### Holding element count
 ```c
 charVector *cVec = VECTOR(char, 'a', 'b', 'c');
 printf("[%d]", charVecSize(cVec)); // [3]
 ```
 
-#### Remove all elements from vector
+### Remove all elements from vector
 ```c
 charVector *cVec = VECTOR(char, 'a', 'b', 'c');
 charVecClear(cVec);
 printf("[%d]", charVecSize(cVec)); // [0]
 ```
 
-#### Add all elements from one vector to other
+### Add all elements from one vector to other
 **NOTE:** Ensure that destination vector have enough space for all elements from source vector
 ```c
 charVector *cVec = NEW_VECTOR_OF(8, char, char, 'a', 'b', 'c');
@@ -220,7 +220,7 @@ charVector *cVec2 = VECTOR(char, 'd', 'e', 'f');
 assert(charVecAddAll(cVec, cVec2) == true); // cVec -> [a], [b], [c], [d], [e], [f], if lack of capacity returns false
 ```
 
-#### Add elements to vector from array
+### Add elements to vector from array
 ```c
 int array[] = {1, 2, 3, 4, 5};
 intVector *intVec = NEW_VECTOR_8(int);
@@ -228,7 +228,7 @@ intVecFromArray(intVec, array, 5);  // intVec -> [1], [2], [3], [4], [5]
 assert(intVecSize(intVec) == 5);
 ```
 
-#### Find element index in vector
+### Find element index in vector
 ```c
 cStrVector *strVec = NEW_VECTOR_4(cStr, char*);
 cStrVecAdd(strVec, "aaa");
@@ -240,40 +240,40 @@ assert(cStrVecIndexOf(strVec, "bbb") == 1);
 assert(cStrVecIndexOf(strVec, "eee") == -1); // not found 
 ```
 
-#### Check that element is in vector
+### Check that element is in vector
 ```c
 cStrVector *strVec = VECTOR_OF(cStr, char*, "a", "b", "c", "d");
 assert(cStrVecContains(strVec, "c") == true);
 assert(cStrVecContains(strVec, "e") == false);
 ```
 
-#### Reverse elements in vector
+### Reverse elements in vector
 ```c
 cStrVector *strVec = VECTOR_OF(cStr, char*, "a", "b", "c", "d");
 cStrVecReverse(strVec); // [d], [c], [b], [a]
 ```
 
-#### Sort elements
+### Sort elements
 Vector element sort by provided comparator
 ```c
 cStrVector *strVec = VECTOR_OF(cStr, char*, "b", "a", "d", "c");
 cStrVecSort(strVec); // [a], [b], [c], [d]
 ```
 
-#### Check that two vectors equals
+### Check that two vectors equals
 ```c
 charVector *cVec = VECTOR(char, 'a', 'b', 'c');
 charVector *cVec2 = VECTOR(char, 'a', 'b', 'c');
 assert(ischarVecEquals(cVec, cVec2) == true);
 ```
 
-#### Remove duplicated values
+### Remove duplicated values
 ```c
 cStrVector *strVec = VECTOR_OF(cStr, char*, "a", "b", "c", "a", "a", "a", "c");
 cStrVecRemoveDup(strVec); // [a], [b], [c]
 ```
 
-#### Vector Union
+### Vector Union
 ```c
 cStrVector *strVec = NEW_VECTOR_OF(12, cStr, char*, "1", "2", "3", "4", "5", "6");
 cStrVector *strVec2 = VECTOR_OF(cStr, char*, "2", "3", "6", "7", "8", "9");
@@ -285,21 +285,21 @@ cStrVecUnion(strVec, strVec2);  // strVec -> [1], [2], [3], [4], [5], [6], [7], 
 cStrVector *strVec = cStrVecUnion(NEW_VECTOR_16(cStr, char*), strVec2);
 ```
 
-#### Vector Intersection
+### Vector Intersection
 ```c
 cStrVector *strVec = NEW_VECTOR_OF(12, cStr, char*, "A", "B", "C", "D", "E", "F");
 cStrVector *strVec2 = VECTOR_OF(cStr, char*, "B", "D", "F", "G", "H", "K");
 cStrVecIntersect(strVec, strVec2);  // strVec -> [B], [D], [F]
 ```
 
-#### Vector Subtraction
+### Vector Subtraction
 ```c
 cStrVector *strVec = NEW_VECTOR_OF(12, cStr, char*, "1", "2", "3", "4", "5", "6");
 cStrVector *strVec2 = VECTOR_OF(cStr, char*, "2", "3", "6", "7", "8", "9");
 cStrVecSubtract(strVec, strVec2);  // strVec -> [1], [4], [5]
 ```
 
-#### Vector Disjunction
+### Vector Disjunction
 ```c
 cStrVector *strVec = NEW_VECTOR_OF(12, cStr, char*, "1", "2", "3", "4", "5", "6");
 cStrVector *strVec2 = VECTOR_OF(cStr, char*, "2", "3", "6", "7", "8", "9");
