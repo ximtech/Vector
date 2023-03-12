@@ -199,7 +199,7 @@ assert(ischarVecEmpty(cVec) == true);  // empty
 assert(ischarVecNotEmpty(cVec) == false);
 ```
 
-### Holding element count
+### Vector element count
 ```c
 charVector *cVec = VECTOR(char, 'a', 'b', 'c');
 printf("[%d]", charVecSize(cVec)); // [3]
@@ -217,7 +217,7 @@ printf("[%d]", charVecSize(cVec)); // [0]
 ```c
 charVector *cVec = NEW_VECTOR_OF(8, char, char, 'a', 'b', 'c');
 charVector *cVec2 = VECTOR(char, 'd', 'e', 'f');
-assert(charVecAddAll(cVec, cVec2) == true); // cVec -> [a], [b], [c], [d], [e], [f], if lack of capacity returns false
+assert(charVecAddAll(cVec, cVec2) == true); // cVec -> [a], [b], [c], [d], [e], [f], if lack of capacity then returns false
 ```
 
 ### Add elements to vector from array
@@ -254,13 +254,12 @@ cStrVecReverse(strVec); // [d], [c], [b], [a]
 ```
 
 ### Sort elements
-Vector element sort by provided comparator
 ```c
 cStrVector *strVec = VECTOR_OF(cStr, char*, "b", "a", "d", "c");
 cStrVecSort(strVec); // [a], [b], [c], [d]
 ```
 
-### Check that two vectors equals
+### Check for two vector equality
 ```c
 charVector *cVec = VECTOR(char, 'a', 'b', 'c');
 charVector *cVec2 = VECTOR(char, 'a', 'b', 'c');
