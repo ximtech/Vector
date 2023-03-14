@@ -55,22 +55,28 @@ Fixed size of generic type `Vector`. This implementation not allocate heap memor
 #include "BufferVector.h"
 ```
 
-### Setup vector element compare function
+### Define Vector type
 
-- On the top level provide function to compare Vector elements, this function will be used for elements ordering.
-- Default type macros can be used.
-- Example:
-
+Provide: 
+1. Vector elements stored type
+2. Optionally: Vector alias, if not provided then type will be used as prefix name
+3. Elements comparator function pointer(for most standard data types it generates automatically)
+Example:
 ```c
-CREATE_NUMBER_COMPARATOR(i, int);   // provide comparator prefix name and type. This creates iComparator() function
-CREATE_NUMBER_COMPARATOR(long, long);       // longComparator(long one, long two)
-CREATE_NUMBER_COMPARATOR(u8, uint8_t);      // u8Comparator(uint8_t one, uint8_t two)
-CREATE_NUMBER_COMPARATOR(u32, uint32_t);    // u32Comparator(uint32_t one, uint32_t two)
-CREATE_CHAR_COMPARATOR(char);               // charComparator(char one, char two)
-CREATE_STRING_COMPARATOR(cStr);             // cStrComparator(const char *one, const char *two)
+CREATE_VECTOR_TYPE(int);   // creates `intVector` type that holds int elements, with default numeric comparator
+CREATE_VECTOR_TYPE(uint32_t, u32);   // creates with alias `u32Vector` type and default comparator
+CREATE_VECTOR_TYPE(User, user, userAgeComparator); // alias will be used for custom type prefix: userVector
+CREATE_VECTOR_TYPE(char*, cStr, strComparator); // `cStrVector`, predefined comparator from `Comparator.h`
 ```
 
-#### Custom comparator creation
+#### Natural ordering comparator
+
+For ordering string in natural order `strNaturalSortComparator()` can be used
+```c
+CREATE_VECTOR_TYPE(char*, cStr, strNaturalSortComparator);
+```
+
+#### Custom comparator creation example
 
 For custom types provide comparator function as in example:
 
@@ -106,20 +112,6 @@ Provide:
 CREATE_CUSTOM_COMPARATOR(userName, User, one, two, strcmp(one.name, two.name)); // creates `int userNameComparator(User one, User two)`
 ```
 
-### Define Vector type
-
-Provide: 
-1. Vector elements stored type
-2. Optionally: Vector alias, if not provided then type will be used as prefix name
-3. Elements comparator function pointer
-Example:
-```c
-CREATE_VECTOR_TYPE(int, iComparator);   // creates `intVector` type that holds int elements
-CREATE_VECTOR_TYPE(long, longComparator);   // `longVector` type
-CREATE_VECTOR_TYPE(char, charComparator);   // `charVector` type
-CREATE_VECTOR_TYPE(User, user, userAgeComparator); // alias will be used for type prefix: userVector
-CREATE_VECTOR_TYPE(char*, cStr, cStrComparator); // `cStrVector`
-```
 
 ### Method and type naming convention
 

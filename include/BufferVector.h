@@ -1,10 +1,8 @@
 #pragma once
 
-#include <stdint.h>
-#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <ctype.h>
+#include "Comparator.h"
 
 #define VECTOR_TYPEDEF(NAME) NAME ##Vector
 #define VECTOR_METHOD_NAME_2(PREFIX, NAME, POSTFIX) PREFIX ## NAME ## Vec ## POSTFIX
@@ -302,12 +300,14 @@ static VECTOR_TYPEDEF(NAME) * VECTOR_METHOD(NAME, Disjunction)(VECTOR_TYPEDEF(NA
 \
 
 
-#define CREATE_VECTOR_TYPE_1(TYPE, COMPARE_FUN) CREATE_VECTOR_TYPE_NAME(TYPE, TYPE, COMPARE_FUN)
-#define CREATE_VECTOR_TYPE_2(TYPE, NAME, COMPARE_FUN) CREATE_VECTOR_TYPE_NAME(TYPE, NAME, COMPARE_FUN)
+#define CREATE_VECTOR_TYPE_1(TYPE) CREATE_VECTOR_TYPE_NAME(TYPE, TYPE, COMPARATOR_FOR_TYPE(TYPE))
+#define CREATE_VECTOR_TYPE_2(TYPE, NAME) CREATE_VECTOR_TYPE_NAME(TYPE, NAME, COMPARATOR_FOR_TYPE(TYPE))
+#define CREATE_VECTOR_TYPE_3(TYPE, NAME, COMPARE_FUN) CREATE_VECTOR_TYPE_NAME(TYPE, NAME, COMPARE_FUN)
 #define CREATE_VECTOR_TYPE_MACRO(_1, _2, _3, FUN, ...) FUN
 
 #define CREATE_VECTOR_TYPE(...)                                     \
     CREATE_VECTOR_TYPE_MACRO(__VA_ARGS__,                           \
+                        CREATE_VECTOR_TYPE_3,                       \
                         CREATE_VECTOR_TYPE_2,                       \
                         CREATE_VECTOR_TYPE_1,                       \
                         ERROR)(__VA_ARGS__)
@@ -359,8 +359,8 @@ static VECTOR_TYPEDEF(NAME) * VECTOR_METHOD(NAME, Disjunction)(VECTOR_TYPEDEF(NA
 #define CREATE_VECTOR_20(NAME, TYPE, V1, V2, V3, V4, V5, V6, V7, V8, V9, V10, V11, V12, V13, V14, V15, V16, V17, V18, V19, V20) NEW_VECTOR_OF(20, NAME, TYPE, V1, V2, V3, V4, V5, V6, V7, V8, V9, V10, V11, V12, V13, V14, V15, V16, V17, V18, V19, V20)
 #define GET_CREATE_VECTOR_MACRO(NAME, TYPE, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, FUN, ...) FUN
 
-#define VECTOR_OF(NAME, TYPE, ...)                                      \
-    GET_CREATE_VECTOR_MACRO(NAME, TYPE, __VA_ARGS__,                    \
+#define VECTOR_OF(NAME, TYPE, ...)                          \
+    GET_CREATE_VECTOR_MACRO(NAME, TYPE, __VA_ARGS__,        \
                         CREATE_VECTOR_20,                   \
                         CREATE_VECTOR_19,                   \
                         CREATE_VECTOR_18,                   \
@@ -384,26 +384,3 @@ static VECTOR_TYPEDEF(NAME) * VECTOR_METHOD(NAME, Disjunction)(VECTOR_TYPEDEF(NA
                         ERROR)(NAME, TYPE, __VA_ARGS__)
 
 #define VECTOR(TYPE, ...) VECTOR_OF(TYPE, TYPE, __VA_ARGS__)
-
-
-// Comparators
-#define CREATE_STRING_COMPARATOR(NAME) \
-static inline int NAME ##Comparator(const char *one, const char *two) {             \
-    return strcmp(one, two);                          \
-} \
-
-#define CREATE_NUMBER_COMPARATOR(NAME, TYPE) \
-static inline int NAME ##Comparator(TYPE one, TYPE two) { \
-    return (((one) < (two)) ? (-1) : (((one) == (two)) ? 0 : 1));             \
-} \
-
-#define CREATE_CHAR_COMPARATOR(NAME) \
-static inline int NAME ##Comparator(char one, char two) { \
-    return (int)((((char)tolower(one)) < ((char)tolower(two))) ? (-1) : ((((char)tolower(one)) == ((char)tolower(two))) ? 0 : 1));             \
-} \
-
-#define CREATE_CUSTOM_COMPARATOR(NAME, TYPE, PARAM_NAME_1, PARAM_NAME_2, EXPR) \
-static inline int NAME ##Comparator(TYPE PARAM_NAME_1, TYPE PARAM_NAME_2) { \
-    return (EXPR);             \
-}                                                                              \
-

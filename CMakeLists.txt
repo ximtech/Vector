@@ -3,7 +3,11 @@ project(Vector VERSION 1.0 LANGUAGES C)
 
 set(CMAKE_C_STANDARD 99)
 
-set(SOURCE_FILES ${PROJECT_NAME}.c include/${PROJECT_NAME}.h)
+set(SOURCE_FILES ${PROJECT_NAME}.c
+        include/${PROJECT_NAME}.h
+        include/BufferVector.h
+        include/Comparator.h
+        Comparator.c)
 add_library(${PROJECT_NAME} STATIC ${SOURCE_FILES})
 set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "")
 

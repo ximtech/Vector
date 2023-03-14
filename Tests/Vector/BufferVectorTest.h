@@ -17,21 +17,15 @@ int userAgeComparator(User one, User two) {    // users will be sorted by 'age'
     return -1;
 }
 
-CREATE_NUMBER_COMPARATOR(i, int);
-CREATE_NUMBER_COMPARATOR(l, long);
-CREATE_NUMBER_COMPARATOR(fl, float);
-CREATE_NUMBER_COMPARATOR(i8, int8_t);
-CREATE_NUMBER_COMPARATOR(u32, uint32_t);
-CREATE_CHAR_COMPARATOR(char);
-CREATE_STRING_COMPARATOR(cStr);
 CREATE_CUSTOM_COMPARATOR(userName, User, one, two, strcmp(one.name, two.name));
 
-CREATE_VECTOR_TYPE(uint32_t, u32, u32Comparator);
-CREATE_VECTOR_TYPE(int8_t, i8, i8Comparator);
-CREATE_VECTOR_TYPE(char*, cStr, cStrComparator);
-CREATE_VECTOR_TYPE(float, flComparator);
-CREATE_VECTOR_TYPE(char, charComparator);
-CREATE_VECTOR_TYPE(int, iComparator);
+CREATE_VECTOR_TYPE(int);
+CREATE_VECTOR_TYPE(float);
+CREATE_VECTOR_TYPE(char);
+CREATE_VECTOR_TYPE(int8_t, i8);
+CREATE_VECTOR_TYPE(uint32_t, u32);
+CREATE_VECTOR_TYPE(char*, cStr, strComparator);
+CREATE_VECTOR_TYPE(char*, str, strNaturalSortComparator);
 CREATE_VECTOR_TYPE(User, user, userAgeComparator);
 
 
@@ -395,28 +389,71 @@ static MunitResult testBuffVecDisjunction(const MunitParameter params[], void *d
     return MUNIT_OK;
 }
 
+static MunitResult testNaturalSortTest(const MunitParameter params[], void *data) {
+    char *strArray[] = {"pic4", "pic02000", "pic05", "pic3", "1-20", "pic100", "pic 6",
+                        "pic 5 something", "jane", "x2-y08", "x8-y8", "1-2", "pic120",
+                        "pic01","pic121", "pic   7", "fred", "tom", "pic 5", "1-02",
+                        "10-20", "pic 5", "pic2", "pic02", "x2-g8", "x2-y7", "pic02a",
+                        "pic 4 else", "pic100a"};
+
+    strVector *strVec = strVecFromArray(NEW_VECTOR_64(str, char*), strArray, ARRAY_SIZE(strArray));
+    strVecSort(strVec);
+
+    assert_string_equal(strVecGet(strVec, 0), "1-2");
+    assert_string_equal(strVecGet(strVec, 1), "1-02");
+    assert_string_equal(strVecGet(strVec, 2), "1-20");
+    assert_string_equal(strVecGet(strVec, 3), "10-20");
+    assert_string_equal(strVecGet(strVec, 4), "fred");
+    assert_string_equal(strVecGet(strVec, 5), "jane");
+    assert_string_equal(strVecGet(strVec, 6), "pic01");
+    assert_string_equal(strVecGet(strVec, 7), "pic2");
+    assert_string_equal(strVecGet(strVec, 8), "pic02");
+    assert_string_equal(strVecGet(strVec, 9), "pic02a");
+    assert_string_equal(strVecGet(strVec, 10), "pic3");
+    assert_string_equal(strVecGet(strVec, 11), "pic4");
+    assert_string_equal(strVecGet(strVec, 12), "pic 4 else");
+    assert_string_equal(strVecGet(strVec, 13), "pic 5");
+    assert_string_equal(strVecGet(strVec, 14), "pic 5");
+    assert_string_equal(strVecGet(strVec, 15), "pic05");
+    assert_string_equal(strVecGet(strVec, 16), "pic 5 something");
+    assert_string_equal(strVecGet(strVec, 17), "pic 6");
+    assert_string_equal(strVecGet(strVec, 18), "pic   7");
+    assert_string_equal(strVecGet(strVec, 19), "pic100");
+    assert_string_equal(strVecGet(strVec, 20), "pic100a");
+    assert_string_equal(strVecGet(strVec, 21), "pic120");
+    assert_string_equal(strVecGet(strVec, 22), "pic121");
+    assert_string_equal(strVecGet(strVec, 23), "pic02000");
+    assert_string_equal(strVecGet(strVec, 24), "tom");
+    assert_string_equal(strVecGet(strVec, 25), "x2-g8");
+    assert_string_equal(strVecGet(strVec, 26), "x2-y7");
+    assert_string_equal(strVecGet(strVec, 27), "x2-y08");
+    assert_string_equal(strVecGet(strVec, 28), "x8-y8");
+    return MUNIT_OK;
+}
+
 
 static MunitTest bufferVectorTests[] = {
         {.name =  "Test new Vector - should correctly create and init vector", .test = testBuffVecCreation},
-        {.name =  "Test new <type>VecAdd() - should correctly add elements to vector", .test = testBuffVecAdd},
-        {.name =  "Test new <type>VecGet() - should correctly return elements from vector", .test = testBuffVecGet},
-        {.name =  "Test new <type>VecPut() - should correctly replace element at index", .test = testBuffVecPut},
-        {.name =  "Test new <type>VecAddAt() - should correctly shift vector with new element at index", .test = testBuffVecAddAt},
-        {.name =  "Test new <type>VecRemoveAt() - should correctly shift vector removing element at index", .test = testBuffVecRemoveAt},
-        {.name =  "Test new is<type>VecEmpty/NotEmpty() - should correctly check vector emptiness", .test = testBuffVecEmptyFunctions},
-        {.name =  "Test new <type>VecSize() - should correctly return elements count", .test = testBuffVecSize},
-        {.name =  "Test new <type>VecAddAll() - should correctly merge two vectors", .test = testBuffVecAddAll},
-        {.name =  "Test new <type>VecFromArray() - should correctly copy array to vector", .test = testBuffVecFromArray},
-        {.name =  "Test new <type>VecIndexOf() - should correctly find element index", .test = testBuffVecIndexOf},
-        {.name =  "Test new <type>VecContains() - should correctly check element existence", .test = testBuffVecContains},
-        {.name =  "Test new <type>VecReverse() - should correctly reverse vector", .test = testBuffVecReverse},
-        {.name =  "Test new <type>VecSort() - should correctly order vector elements", .test = testBuffVecSort},
-        {.name =  "Test new is<type>VecEquals() - should correctly check vector equality", .test = testBuffVecEquals},
-        {.name =  "Test new <type>VecRemoveDup() - should correctly remove repeated values", .test = testBuffVecRemoveDup},
-        {.name =  "Test new <type>VecUnion() - should correctly union two vectors", .test = testBuffVecUnion},
-        {.name =  "Test new <type>VecIntersect() - should correctly intersect two vectors", .test = testBuffVecIntersect},
-        {.name =  "Test new <type>VecSubtract() - should correctly subtract two vectors", .test = testBuffVecSubtract},
-        {.name =  "Test new <type>VecDisjunction() - should correctly make disjunction of two vectors", .test = testBuffVecDisjunction},
+        {.name =  "Test <type>VecAdd() - should correctly add elements to vector", .test = testBuffVecAdd},
+        {.name =  "Test <type>VecGet() - should correctly return elements from vector", .test = testBuffVecGet},
+        {.name =  "Test <type>VecPut() - should correctly replace element at index", .test = testBuffVecPut},
+        {.name =  "Test <type>VecAddAt() - should correctly shift vector with new element at index", .test = testBuffVecAddAt},
+        {.name =  "Test <type>VecRemoveAt() - should correctly shift vector removing element at index", .test = testBuffVecRemoveAt},
+        {.name =  "Test is<type>VecEmpty/NotEmpty() - should correctly check vector emptiness", .test = testBuffVecEmptyFunctions},
+        {.name =  "Test <type>VecSize() - should correctly return elements count", .test = testBuffVecSize},
+        {.name =  "Test <type>VecAddAll() - should correctly merge two vectors", .test = testBuffVecAddAll},
+        {.name =  "Test <type>VecFromArray() - should correctly copy array to vector", .test = testBuffVecFromArray},
+        {.name =  "Test <type>VecIndexOf() - should correctly find element index", .test = testBuffVecIndexOf},
+        {.name =  "Test <type>VecContains() - should correctly check element existence", .test = testBuffVecContains},
+        {.name =  "Test <type>VecReverse() - should correctly reverse vector", .test = testBuffVecReverse},
+        {.name =  "Test <type>VecSort() - should correctly order vector elements", .test = testBuffVecSort},
+        {.name =  "Test is<type>VecEquals() - should correctly check vector equality", .test = testBuffVecEquals},
+        {.name =  "Test <type>VecRemoveDup() - should correctly remove repeated values", .test = testBuffVecRemoveDup},
+        {.name =  "Test <type>VecUnion() - should correctly union two vectors", .test = testBuffVecUnion},
+        {.name =  "Test <type>VecIntersect() - should correctly intersect two vectors", .test = testBuffVecIntersect},
+        {.name =  "Test <type>VecSubtract() - should correctly subtract two vectors", .test = testBuffVecSubtract},
+        {.name =  "Test <type>VecDisjunction() - should correctly make disjunction of two vectors", .test = testBuffVecDisjunction},
+        {.name =  "Test strNaturalSortComparator() - should correctly sort string in natural order", .test = testNaturalSortTest},
 
         END_OF_TESTS
 };
